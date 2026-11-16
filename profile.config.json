@@ -30,6 +30,11 @@
     "Photo & Video"
   ],
 
+  "education": [
+    { "years": "2022 — now", "school": "Secondary school", "field": "Information technology" },
+    { "years": "2013 — 2022", "school": "Primary school", "field": "Where the drawing started" }
+  ],
+
   "projects": [
     { "repo": "Portfolio2", "title": "Portfolio", "tag": "Web", "description": "A spatial portfolio: five panels around a hub, reached with arrows, keys, wheel or swipe.", "tools": "React · TypeScript · GSAP" },
     { "repo": "HearBy", "title": "HearBy", "tag": "Hackathon", "description": "Turns sound into visuals so deaf and hard-of-hearing people can see tone, emotion and rhythm.", "tools": "JavaScript · Web Audio" },

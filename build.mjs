@@ -96,8 +96,19 @@ c.skills.forEach((s, i) => {
 })
 y += 56
 
+// Education: years in accent, school as a display line, field on the right, hairline below.
+parts.push(band(y, 4, 'Education')); y += 56
+c.education.forEach((e) => {
+  y += 64
+  parts.push(t(40, y, e.years, { fill: accent, size: 11 }))
+  parts.push(t(220, y + 4, e.school, { size: 24, ls: 6 }))
+  parts.push(t(W - 40, y, e.field, { anchor: 'end', size: 13, ls: 0, weight: 500, upper: false }))
+  parts.push(`<line x1="40" y1="${y + 24}" x2="${W - 40}" y2="${y + 24}" stroke="${ink}" stroke-opacity=".25"/>`)
+})
+y += 64
+
 // Projects title band closes the main image; the cards follow as linked images.
-parts.push(band(y, 4, 'Projects')); y += 56
+parts.push(band(y, 5, 'Projects')); y += 56
 
 mkdirSync('assets', { recursive: true })
 for (const f of readdirSync('assets')) if (f.endsWith('.svg')) rmSync('assets/' + f) // clear old builds
