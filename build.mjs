@@ -104,51 +104,55 @@ writeFileSync('assets/profile.svg', svg(W, y, parts.join('\n')))
 
 // ---------- project cards (each its own link) ----------
 // Cream card, ink hairline box and the site's hard 10px ink shadow for floating media.
-const CW = 440, CH = 230
+// Each card is exactly half the canvas (W/2) on a cream tile, so two side by side form one seamless row.
+const CW = W / 2, CH = 260, M = 24 // M = cream margin around the card inside its tile
 const card = (p, i) => {
-  const desc = wrap(p.description, 40).slice(0, 3)
+  const desc = wrap(p.description, 38).slice(0, 3)
+  const x0 = M, y0 = M, cw = CW - 2 * M - 10, ch = CH - 2 * M - 10 // -10 leaves room for the shadow
   return svg(CW, CH, `
-<rect x="10" y="10" width="${CW - 20}" height="${CH - 20}" fill="${ink}"/>
-<rect x="0" y="0" width="${CW - 20}" height="${CH - 20}" fill="${cream}" stroke="${ink}" stroke-width="2"/>
-<rect x="1" y="1" width="${CW - 22}" height="44" fill="${ink}"/>
-${t(20, 28, String(i + 1).padStart(2, '0'), { fill: accent })}
-${t(56, 29, p.title, { size: 15, ls: 5, fill: cream })}
-${t(CW - 40, 28, p.tag, { size: 10, fill: cream, anchor: 'end' })}
-${desc.map((l, j) => t(20, 84 + j * 22, l, { size: 16, ls: 0, weight: 500, upper: false })).join('\n')}
-<line x1="20" y1="${CH - 60}" x2="${CW - 40}" y2="${CH - 60}" stroke="${ink}" stroke-opacity=".25"/>
-${t(20, CH - 36, p.tools, { size: 10, ls: 2 })}
-${t(CW - 40, CH - 36, 'View →', { size: 10, ls: 2, fill: accent, anchor: 'end' })}`, { bg: 'transparent', grain: false })
+<rect x="${x0 + 10}" y="${y0 + 10}" width="${cw}" height="${ch}" fill="${ink}"/>
+<rect x="${x0}" y="${y0}" width="${cw}" height="${ch}" fill="${cream}" stroke="${ink}" stroke-width="2"/>
+<rect x="${x0}" y="${y0}" width="${cw}" height="44" fill="${ink}"/>
+${t(x0 + 20, y0 + 28, String(i + 1).padStart(2, '0'), { fill: accent })}
+${t(x0 + 56, y0 + 29, p.title, { size: 15, ls: 5, fill: cream })}
+${t(x0 + cw - 20, y0 + 28, p.tag, { size: 10, fill: cream, anchor: 'end' })}
+${desc.map((l, j) => t(x0 + 20, y0 + 84 + j * 22, l, { size: 16, ls: 0, weight: 500, upper: false })).join('\n')}
+<line x1="${x0 + 20}" y1="${y0 + ch - 48}" x2="${x0 + cw - 20}" y2="${y0 + ch - 48}" stroke="${ink}" stroke-opacity=".25"/>
+${t(x0 + 20, y0 + ch - 22, p.tools, { size: 10, ls: 2 })}
+${t(x0 + cw - 20, y0 + ch - 22, 'View →', { size: 10, ls: 2, fill: accent, anchor: 'end' })}`)
 }
 c.projects.forEach((p, i) => writeFileSync(`assets/project-${slug(p.repo)}.svg`, card(p, i)))
 
 // ---------- link buttons ----------
-const button = (label) => {
-  const w = label.length * 13 + 56
-  // Cream face + ink hairline + hard ink shadow, so it reads on GitHub's light and dark themes.
-  return [w, svg(w, 48, `<rect x="5" y="5" width="${w - 5}" height="43" fill="${ink}"/>
-<rect x="1" y="1" width="${w - 7}" height="41" fill="${cream}" stroke="${ink}" stroke-width="2"/>
-<circle cx="20" cy="22" r="4" fill="${accent}"/>
-${t(34, 26, label, { size: 11 })}`, { grain: false, bg: 'transparent' })]
+// The buttons share one row: each tile is an equal slice of the canvas, cream, with the button centred.
+const BH = 96
+const button = (label, tw) => {
+  const bw = label.length * 13 + 56, bx = (tw - bw) / 2, by = 24
+  return svg(tw, BH, `<rect x="${bx + 5}" y="${by + 5}" width="${bw}" height="43" fill="${ink}"/>
+<rect x="${bx}" y="${by}" width="${bw}" height="43" fill="${cream}" stroke="${ink}" stroke-width="2"/>
+<circle cx="${bx + 20}" cy="${by + 22}" r="4" fill="${accent}"/>
+${t(bx + 34, by + 26, label, { size: 11 })}`)
 }
-const links = c.links.map((l) => { const [w, s] = button(l.label); writeFileSync(`assets/link-${slug(l.label)}.svg`, s); return { ...l, w } })
+// Percent widths that add up to exactly 100 (e.g. 34/33/33), so the row has no sliver at the end.
+const pct = c.links.map((_, i) => Math.floor(100 / c.links.length) + (i < 100 % c.links.length ? 1 : 0))
+const links = c.links.map((l, i) => {
+  writeFileSync(`assets/link-${slug(l.label)}.svg`, button(l.label, (W * pct[i]) / 100))
+  return { ...l, pct: pct[i] }
+})
 
 // ---------- README ----------
-const cards = c.projects.map((p) =>
-  `<a href="https://github.com/0skrrr/${p.repo}"><img src="assets/project-${slug(p.repo)}.svg" width="49%" alt="${esc(p.title)} — ${esc(p.description)}"></a>`)
-const rows = []
-for (let i = 0; i < cards.length; i += 2) rows.push(cards.slice(i, i + 2).join('\n'))
+// Every image sits inline in ONE paragraph with no whitespace between tags, and align="top" so the line has no
+// descender gap below it. That leaves no margin, line gap or space for GitHub's background to show through.
+// An odd number of projects gets an empty cream tile so the last row stays full.
+const tiles = c.projects.map((p) =>
+  `<a href="https://github.com/0skrrr/${p.repo}"><img align="top" src="assets/project-${slug(p.repo)}.svg" width="50%" alt="${esc(p.title)} — ${esc(p.description)}"></a>`)
+if (c.projects.length % 2) {
+  writeFileSync('assets/project-empty.svg', svg(CW, CH, ''))
+  tiles.push(`<img align="top" src="assets/project-empty.svg" width="50%" alt="">`)
+}
 
 writeFileSync('README.md', `<!-- Generated by build.mjs from profile.config.json. Edit the config, then run: node build.mjs -->
-<p align="center">
-<img src="assets/profile.svg" width="100%" alt="${esc(c.name)} — ${esc(c.role)} ${esc(c.about)}">
-</p>
-
-<p align="center">
-${rows.join('\n<br>\n')}
-</p>
-
-<p align="center">
-${links.map((l) => `<a href="${l.href}"><img src="assets/link-${slug(l.label)}.svg" height="48" alt="${esc(l.label)}"></a>`).join('\n')}
-</p>
+<p><img align="top" src="assets/profile.svg" width="100%" alt="${esc(c.name)} — ${esc(c.role)} ${esc(c.about)}">${tiles.join('')}${
+  links.map((l) => `<a href="${l.href}"><img align="top" src="assets/link-${slug(l.label)}.svg" width="${l.pct}%" alt="${esc(l.label)}"></a>`).join('')}</p>
 `)
 console.log(`Built profile.svg (${W}×${y}), ${c.projects.length} project cards, ${links.length} links → README.md`)
