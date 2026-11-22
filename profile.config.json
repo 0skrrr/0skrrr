@@ -1,0 +1,38 @@
+{
+  "site": "https://oskrrr.dev",
+  "name": "Oskar Kopčil",
+  "nickname": "Oskrrr",
+  "role": "Developer, and kinda a designer?",
+  "statement": "I try to make cool digital stuff",
+  "intro": [
+    "I design and build apps, websites and small games, from the first sketch",
+    "in Figma to working code, and spend the rest of my time on branding,",
+    "photography and video. Student at Creative Hill College."
+  ],
+  "links": [
+    { "id": "site", "label": "oskrrr.dev", "kicker": "Portfolio", "href": "https://oskrrr.dev" },
+    { "id": "linkedin", "label": "LinkedIn", "kicker": "Connect", "href": "https://www.linkedin.com/in/oskar-kop%C4%8Dil-b68aa0368" },
+    { "id": "email", "label": "Email", "kicker": "Write to me", "href": "mailto:kopcil.oskar@gmail.com" }
+  ],
+  "projects": [
+    { "id": "hearby", "title": "HearBy", "meta": "App · 2026", "href": "https://github.com/0skrrr/HearBy",
+      "lines": ["Turns sound into visuals so deaf and hard-of-hearing people can see tone,", "emotion, pitch and rhythm. Built at the AT&T Hackathon Junior 2026."] },
+    { "id": "predichess", "title": "Predichess", "meta": "Web · 2026", "href": "https://github.com/0skrrr/Predichess",
+      "lines": ["Build and play interactive chess lessons; players work through positions", "and questions and earn XP and Elo."] },
+    { "id": "graphite", "title": "Graphite", "meta": "App · 2026", "href": "https://github.com/0skrrr/graphite-releases",
+      "lines": ["My second-brain note app: every note a plain Markdown file in a folder", "you own, on macOS, Windows, Linux and Android."] }
+  ],
+  "more": [
+    { "id": "portfolio2", "title": "Portfolio", "line": "The spatial portfolio behind oskrrr.dev", "href": "https://github.com/0skrrr/Portfolio2" },
+    { "id": "vr-game-web", "title": "VR Game Web", "line": "Multi-language site for a VR game", "href": "https://github.com/0skrrr/VR-Game-Web" },
+    { "id": "nebrecime", "title": "nebrecime.cz", "line": "Study notes and quizzes for CHC students", "href": "https://github.com/0skrrr/nebrecime.cz" },
+    { "id": "codename-run", "title": "Codename RUN", "line": "A game project in progress", "href": "https://github.com/0skrrr/Codename-RUN" },
+    { "id": "minecraft", "title": "Minecraft mod", "line": "Fabric and NeoForge from one codebase", "href": "https://github.com/0skrrr/MinecraftMod01" },
+    { "id": "all", "title": "All repositories", "line": "Everything else on GitHub →", "href": "https://github.com/0skrrr?tab=repositories" }
+  ],
+  "tools": {
+    "daily": ["Figma", "Affinity", "TypeScript", "React", "WebStorm", "GitHub", "Discord", "Graphite", "Vivaldi"],
+    "also": ["Blender", "DaVinci Resolve", "Lightroom", "Photoshop", "Unity", "Python", "C#", "Tauri", "SCSS"]
+  },
+  "skills": ["App Design", "Web Design", "Game Design", "UI / UX", "Backend", "Branding", "Photo & Video"]
+}

@@ -1,0 +1,2 @@
+Urbanist (Corey Hu), SIL Open Font License 1.1 — https://openfontlicense.org
+Variable woff2 (latin + latin-ext) from Google Fonts, embedded into the SVG cards by build.mjs.
